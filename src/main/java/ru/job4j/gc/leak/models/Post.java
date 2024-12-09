@@ -3,6 +3,9 @@ package ru.job4j.gc.leak.models;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 4. Найти утечку памяти [#504882 #523298]
+ */
 @SuppressWarnings("unused")
 public class Post {
     private int id;
@@ -10,6 +13,17 @@ public class Post {
     private String text;
 
     private List<Comment> comments;
+
+    public Post(int id, String text, List<Comment> comments) {
+        this.id = id;
+        this.text = text;
+        this.comments = comments;
+    }
+
+    public Post(String text, List<Comment> comments) {
+        this.text = text;
+        this.comments = comments;
+    }
 
     public int getId() {
         return id;

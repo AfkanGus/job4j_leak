@@ -5,24 +5,27 @@ import ru.job4j.gc.leak.models.Post;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 4. Найти утечку памяти [#504882 #523298]
+ */
 public class PostStore {
 
-    private final static Map<Integer, Post> POSTS = new HashMap<>();
+    private Map<Integer, Post> posts = new HashMap<>();
 
-    private final AtomicInteger atomicInteger = new AtomicInteger(1);
+    private AtomicInteger atomicInteger = new AtomicInteger(1);
 
     public Post add(Post post) {
         var id = atomicInteger.getAndIncrement();
         post.setId(id);
-        POSTS.put(id, post);
+        posts.put(id, post);
         return post;
     }
 
     public void removeAll() {
-        POSTS.clear();
+        posts.clear();
     }
 
-    public static Collection<Post> getPosts() {
-        return POSTS.values();
+    public Collection<Post> getPosts() {
+        return posts.values();
     }
 }

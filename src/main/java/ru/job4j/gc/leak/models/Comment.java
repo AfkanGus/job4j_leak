@@ -2,11 +2,19 @@ package ru.job4j.gc.leak.models;
 
 import java.util.Objects;
 
+/**
+ * 4. Найти утечку памяти [#504882 #523298]
+ */
 @SuppressWarnings("unused")
 public class Comment {
     private String text;
 
     private User user;
+
+    public Comment(String text, User user) {
+        this.text = text;
+        this.user = user;
+    }
 
     public User getUser() {
         return user;

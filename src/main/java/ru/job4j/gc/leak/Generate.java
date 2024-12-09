@@ -5,6 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+/**
+ * 4. Найти утечку памяти [#504882 #523298]
+ */
 public interface Generate {
     void generate();
 

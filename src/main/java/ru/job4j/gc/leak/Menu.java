@@ -5,6 +5,9 @@ import ru.job4j.gc.leak.models.Post;
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * 4. Найти утечку памяти [#504882 #523298]
+ */
 public class Menu {
 
     public static final Integer ADD_POST = 1;
@@ -15,6 +18,7 @@ public class Menu {
     public static final String SELECT = "Выберите меню";
     public static final String COUNT = "Выберите количество создаваемых постов";
     public static final String TEXT_OF_POST = "Введите текст";
+    public static final String ALL_DELETE = "Все посты удалены";
     public static final String EXIT = "Конец работы";
 
     public static final String MENU = """
@@ -44,55 +48,32 @@ public class Menu {
             if (ADD_POST == userChoice) {
                 System.out.println(TEXT_OF_POST);
                 String text = scanner.nextLine();
-                userGenerator.generate();
-                commentGenerator.generate();
-                var post = new Post();
-                post.setText(text);
-                post.setComments(CommentGenerator.getComments());
-                var saved = postStore.add(post);
-                System.out.println("Generate: " + saved.getId());
+                createPost(commentGenerator, userGenerator, postStore, text);
             } else if (ADD_MANY_POST == userChoice) {
                 System.out.println(TEXT_OF_POST);
                 String text = scanner.nextLine();
                 System.out.println(COUNT);
-                String count = scanner.nextLine();
-                memUsage();
-                for (int i = 0; i < Integer.parseInt(count); i++) {
-                    System.out.printf("\rGenerate %.2f%% %.2fMb",
-                            ((double) i / Integer.parseInt(count)) * 100,
-                            memUsage());
+                int count = Integer.parseInt(scanner.nextLine());
+                for (int i = 0; i < count; i++) {
                     createPost(commentGenerator, userGenerator, postStore, text);
                 }
-                System.out.println();
-                memUsage();
             } else if (SHOW_ALL_POSTS == userChoice) {
-                System.out.println(PostStore.getPosts());
+                System.out.println(postStore.getPosts());
             } else if (DELETE_POST == userChoice) {
-                System.out.println("Удаление всех постов ...");
+                System.out.println(ALL_DELETE);
                 postStore.removeAll();
             } else {
                 run = false;
                 System.out.println(EXIT);
             }
         }
-    }
-
-    private static double memUsage() {
-        var rt = Runtime.getRuntime();
-        var totalMem = rt.totalMemory();
-        var freeMem = rt.freeMemory();
-        var usedMem = totalMem - freeMem;
-        return (double) usedMem / 1024 / 1024;
+        scanner.close();
     }
 
     private static void createPost(CommentGenerator commentGenerator,
-                                   UserGenerator userGenerator,
-                                   PostStore postStore, String text) {
+                                   UserGenerator userGenerator, PostStore postStore, String text) {
         userGenerator.generate();
         commentGenerator.generate();
-        var post = new Post();
-        post.setText(text);
-        post.setComments(CommentGenerator.getComments());
-        postStore.add(post);
+        postStore.add(new Post(text, commentGenerator.getComments()));
     }
 }
