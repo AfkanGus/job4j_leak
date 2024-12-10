@@ -11,7 +11,6 @@ import java.util.Random;
  * 4. Найти утечку памяти [#504882 #523298]
  */
 public class UserGenerator implements Generate {
-
     public static final String PATH_NAMES = "files/names.txt";
     public static final String PATH_SURNAMES = "files/surnames.txt";
     public static final String PATH_PATRONS = "files/patr.txt";
